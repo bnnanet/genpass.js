@@ -1,0 +1,48 @@
+{
+  "name": "genpass",
+  "version": "0.1.0",
+  "description": "A Sane, Self-Hosted Password Generator",
+  "main": "genpass.js",
+  "files": [
+    "genpass.js",
+    "./bin/*.js",
+    "./lib/*.js",
+    "./tests/*.js"
+  ],
+  "type": "module",
+  "imports": {
+    "genpass": "./genpass.js",
+    "genpass/": "./"
+  },
+  "exports": {
+    ".": "./genpass.js",
+    "./*": "./*"
+  },
+  "scripts": {
+    "bump": "npm version -m \"chore(release): bump to v%s\"",
+    "fmt": "npm run prettier",
+    "lint": "npm run jshint && npm run tsc",
+    "prepublish": "npm run reexport-types",
+    "test": "node ./tests/",
+    "--------": "-------------------------------------------------",
+    "jshint": "npx -p jshint@2.x -- jshint -c ./.jshintrc ./*.js",
+    "prettier": "npx -p prettier@3.x -- prettier -w '**/*.{js,md}'",
+    "tsc": "! npx -p typescript@5.x -- tsc -p ./jsconfig.json | grep '\\.js(\\d\\+,\\d\\+): error' | grep -v '\\<node_modules/'",
+    "reexport-types": "npx -p jswt@2.x -- reexport"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bnnanet/genpass.js.git"
+  },
+  "keywords": [
+    "self-hosted",
+    "password",
+    "generator"
+  ],
+  "author": "AJ ONeal <aj@therootcompany.com> (https://throotcompany.com/)",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/bnnanet/genpass.js/issues"
+  },
+  "homepage": "https://github.com/bnnanet/genpass.js#readme"
+}
