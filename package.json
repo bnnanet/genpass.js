@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "description": "A Sane, Self-Hosted Password Generator",
   "main": "genpass.js",
+  "bin": {
+      "genpass": "./bin/genpass.js"
+  },
   "files": [
     "genpass.js",
     "./bin/*.js",
-    "./lib/*.js",
-    "./tests/*.js"
+    "./lib/*.js"
   ],
   "type": "module",
   "imports": {
