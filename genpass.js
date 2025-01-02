@@ -175,6 +175,79 @@ GenPass.encodeBits = function (charset, rand65, numBits) {
 };
 
 /**
+ * Hyphenate an input string based on length
+ * (the rules are somewhat arbitrary and may change)
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+GenPass.hyphenate = function (str) {
+  /* jshint maxcomplexity: 30 */
+  let len = str.length;
+
+  // TODO: generalize this a bit
+  // it's something like
+  // if divisible by 3 or 4 and the result is >= 3 and <=7, group it
+  // if greater than 6 and divisible by 2, group it
+  // if it's got a remainder of 1 or 2, group it with middle(s) longer
+
+  if (len < 6) {
+    return str;
+  }
+
+  if (len === 6 || len === 9) {
+    let matches = str.match(/.{1,3}/g);
+    // xxx-xxx or xxx-xxx-xxx
+    //@ts-expect-error
+    return matches.join("-");
+  }
+
+  if (len === 8 || len === 12 || len === 16 || len === 20) {
+    let matches = str.match(/.{1,4}/g);
+    // xxxx-xxxx or xxxx-xxxx-xxxx
+    //@ts-expect-error
+    return matches.join("-");
+  }
+
+  if (len === 10 || len === 15 || len === 25 || len === 35) {
+    let matches = str.match(/.{1,5}/g);
+    // xxxxx-xxxxx-xxxxx
+    //@ts-expect-error
+    return matches.join("-");
+  }
+
+  if (len === 18 || len === 24 || len === 30) {
+    let matches = str.match(/.{1,6}/g);
+    // xxxxx-xxxxx-xxxxx
+    //@ts-expect-error
+    return matches.join("-");
+  }
+
+  if (len === 14 || len === 21 || len === 28 || len === 35 || len === 42) {
+    let matches = str.match(/.{1,7}/g);
+    // xxxxx-xxxxx-xxxxx
+    //@ts-expect-error
+    return matches.join("-");
+  }
+
+  if (len === 24 || len === 32 || len === 40) {
+    let matches = str.match(/.{1,8}/g);
+    // xxxxxxxx-xxxxxxxx-xxxxxxxx
+    //@ts-expect-error
+    return matches.join("-");
+  }
+
+  if (len === 27 || len === 36) {
+    let matches = str.match(/.{1,9}/g);
+    // xxxxxxxxx-xxxxxxxxx-xxxxxxxxx
+    //@ts-expect-error
+    return matches.join("-");
+  }
+
+  return str;
+};
+
+/**
  * Calculate the minimum bit entropy for the number of characters in a given base
  *
  * @param {Number} base - size of dictionary (ex: 74)

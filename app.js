@@ -227,94 +227,16 @@ function encodePassword() {
   let plainCharset = plain.$charset.textContent || "";
   let plainPass = GenPass.encodeChars(plainCharset, passBytes, plain.numChars);
   if ($hypenateAlphanum.checked) {
-    plainPass = formatAlphanum(plainPass);
+    plainPass = GenPass.hyphenate(plainPass);
   }
   plain.$password.textContent = plainPass;
 
   let hexCharset = hex.$charset.textContent || "";
   let hexPass = GenPass.encodeChars(hexCharset, passBytes, hex.numChars);
   if ($hypenateAlphanum.checked) {
-    hexPass = formatAlphanum(hexPass);
+    hexPass = GenPass.hyphenate(hexPass);
   }
   hex.$password.textContent = hexPass;
-}
-
-/**
- * Formats an input string based on its length.
- *
- * @param {string} input - The string to be formatted.
- * @returns {string} - The formatted string.
- */
-function formatAlphanum(input) {
-  /* jshint maxcomplexity: 30 */
-  const length = input.length;
-
-  // TODO: generalize this a bit
-  // it's something like
-  // if divisible by 3 or 4 and the result is >= 3 and <=7, group it
-  // if greater than 6 and divisible by 2, group it
-  // if it's got a remainder of 1 or 2, group it with middle(s) longer
-
-  if (length < 6) {
-    return input;
-  }
-
-  if (length === 6 || length === 9) {
-    let matches = input.match(/.{1,3}/g);
-    // xxx-xxx or xxx-xxx-xxx
-    //@ts-expect-error
-    return matches.join("-");
-  }
-
-  if (length === 8 || length === 12 || length === 16 || length === 20) {
-    let matches = input.match(/.{1,4}/g);
-    // xxxx-xxxx or xxxx-xxxx-xxxx
-    //@ts-expect-error
-    return matches.join("-");
-  }
-
-  if (length === 10 || length === 15 || length === 25 || length === 35) {
-    let matches = input.match(/.{1,5}/g);
-    // xxxxx-xxxxx-xxxxx
-    //@ts-expect-error
-    return matches.join("-");
-  }
-
-  if (length === 18 || length === 24 || length === 30) {
-    let matches = input.match(/.{1,6}/g);
-    // xxxxx-xxxxx-xxxxx
-    //@ts-expect-error
-    return matches.join("-");
-  }
-
-  if (
-    length === 14 ||
-    length === 21 ||
-    length === 28 ||
-    length === 35 ||
-    length === 42
-  ) {
-    let matches = input.match(/.{1,7}/g);
-    // xxxxx-xxxxx-xxxxx
-    //@ts-expect-error
-    return matches.join("-");
-  }
-
-  if (length === 24 || length === 32 || length === 40) {
-    let matches = input.match(/.{1,8}/g);
-    // xxxxxxxx-xxxxxxxx-xxxxxxxx
-    //@ts-expect-error
-    return matches.join("-");
-  }
-
-  if (length === 27 || length === 36) {
-    let matches = input.match(/.{1,9}/g);
-    // xxxxxxxxx-xxxxxxxxx-xxxxxxxxx
-    //@ts-expect-error
-    return matches.join("-");
-  }
-
-  return input;
 }
 
 async function main() {
