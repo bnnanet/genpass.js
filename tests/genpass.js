@@ -97,7 +97,7 @@ BaseX._decodeUnsafe = function (ALPHABET, source) {
   return vch;
 };
 
-let base = GenPass.bases.base62 + GenPass.specials;
+let base = GenPass.bases.base62 + GenPass.specials.all;
 let charset = GenPass.calculateAllowed(base, GenPass.blacklist);
 console.info(`charset = `, charset);
 console.info(`base = ${charset.length}`);

@@ -143,7 +143,7 @@ function updateCharset() {
   let specials = "";
   {
     let exclusions = getBlacklist();
-    specials = GenPass.calculateAllowed(GenPass.specials, exclusions);
+    specials = GenPass.calculateAllowed(GenPass.specials.all, exclusions);
   }
 
   base = GenPass.calculateAllowed(base, blacklist);

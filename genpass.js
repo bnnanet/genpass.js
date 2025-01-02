@@ -12,7 +12,10 @@ GenPass.bases = {
   binary: "01",
 };
 
-GenPass.specials = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+GenPass.specials = {
+  all: " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
+  safe: `!(),-.=^_{}~`,
+};
 
 /**
  * Characters that can begin or end a quoted or special sequence,
