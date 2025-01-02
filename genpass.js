@@ -62,25 +62,88 @@ GenPass.calculateAllowed = function (charset, blacklist) {
 };
 
 /**
+ * Generates n+1 (for padding) cryptographically random bytes
+ *
+ * @param {Number} [n=64]
+ * @returns {Uint8Array}
+ */
+GenPass.generateBytes = function (n = 64) {
+  n += 1; // 1 extra for padding
+
+  let rand65 = new Uint8Array(n);
+  crypto.getRandomValues(rand65);
+
+  return rand65;
+};
+
+// TODO bring generateChars and generateBits back
+
+/**
  * Generate password with a minimum number of characters.
  *
  * @param {String} charset
  * @param {Number} numChars
+ * @returns {String}
  */
 GenPass.generateChars = function (charset, numChars) {
+  let numBits = GenPass.getMinBits(charset.length, numChars + 4);
+  let numBytes = GenPass.bitsToBytes(numBits);
+  numBytes = Math.max(64, numBytes);
+  let rand65 = GenPass.generateBytes(numBytes);
+
+  let rnd = GenPass.encodeChars(charset, rand65, numChars);
+  return rnd;
+};
+
+/**
+ * Generate a password with minimum bit-entropy.
+ *
+ * @param {String} charset
+ * @param {Number} numBits
+ */
+GenPass.generateBits = function (charset, numBits) {
+  let numChars = GenPass.getMinChars(charset.length, numBits);
+
+  let rnd = GenPass.generateChars(charset, numChars);
+  return rnd;
+};
+
+/**
+ * Encode the given bytes as a password of the given length in the given charset.
+ *
+ * @param {String} charset
+ * @param {Uint8Array} rand65 - 65 random bytes (64 + 1 for padding)
+ * @param {Number} numChars
+ */
+GenPass.encodeChars = function (charset, rand65, numChars) {
+  if (!numChars) {
+    let bitsPerChar = GenPass.logN(charset.length, 2);
+    let safeBytes = rand65.length - 1;
+    let totalBits = safeBytes * 8;
+    let numCharsF = totalBits / bitsPerChar;
+    numChars = Math.floor(numCharsF);
+  }
+
   let alphanumRe = /^[a-z0-9]*$/i;
   let needsSpecial = !alphanumRe.test(charset) && numChars >= 6;
-  let rnd = "";
 
   let numBits = GenPass.getMinBits(charset.length, numChars + 4);
   let numBytes = GenPass.bitsToBytes(numBits);
-  let rndBytes = new Uint8Array(numBytes);
+  if (rand65.length <= numBytes) {
+    numBytes += 1;
+    let msg = `needed ${numBytes} random bytes, but got ${rand65.length}`;
+    throw new Error(msg);
+  }
 
-  for (;;) {
-    crypto.getRandomValues(rndBytes);
-
-    rnd = GenPass.baseXencode(charset, rndBytes);
-    rnd = rnd.slice(2, numChars + 2);
+  let rndSource = GenPass.baseXencode(charset, rand65);
+  let rnd = "";
+  // drop leading character, which may be 0-padded
+  for (let start = 1; start < 1000; start += 1) {
+    rnd = rndSource.slice(start, start + numChars);
+    if (rnd.length < numChars) {
+      let msg = `no special characters could be encoded from the ${rand65.length} given bytes - they may not be uniformly cryptographically random, or there may be too few`;
+      throw new Error(msg);
+    }
 
     if (needsSpecial) {
       let hasSpecial = !alphanumRe.test(rnd);
@@ -95,15 +158,16 @@ GenPass.generateChars = function (charset, numChars) {
 };
 
 /**
- * Generate a password with minimum bit-entropy.
+ * Encode the given bytes as a password of the given length in the given charset.
  *
  * @param {String} charset
+ * @param {Uint8Array} rand65 - 65 random bytes (64 + 1 for padding)
  * @param {Number} numBits
  */
-GenPass.generateBits = function (charset, numBits) {
+GenPass.encodeBits = function (charset, rand65, numBits) {
   let numChars = GenPass.getMinChars(charset.length, numBits);
 
-  let rnd = GenPass.generateChars(charset, numChars);
+  let rnd = GenPass.encodeChars(charset, rand65, numChars);
   return rnd;
 };
 
