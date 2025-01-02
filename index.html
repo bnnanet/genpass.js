@@ -26,11 +26,20 @@
         margin: 0;
         padding: 0;
       }
+      pre {
+        margin: 0.5rem;
+        padding: 0.2rem;
+      }
+      fieldset {
+        padding-bottom: 0.2rem;
+        margin-bottom: 1.5rem;
+      }
+
       .password-display {
         font-family: monospace;
         font-size: 1.5rem;
         text-align: center;
-        margin: 1rem 0;
+        margin: 0;
         padding: 0.5rem;
         background: #f3f3f3;
         border-radius: 5px;
@@ -105,26 +114,58 @@
     </header>
     <main>
       <form>
-        <div class="password-display" id="passwordDisplay">
-          Press 'Generate Password'
-        </div>
-        <div>
+        <fieldset data-id="pw-special">
+          <legend>
+            Special Characters (Base
+            <span data-name="base">M</span>) <span data-name="entropy">12</span>
+          </legend>
+          <div class="password-display" data-name="password">
+            Error: Could not generate password
+          </div>
           <pre
             style="text-align: center"
-          >Base <span data-id="base">74</span>: <span data-id="charset">abc123</span></pre>
-        </div>
+          ><span data-name="charset">abc123</span></pre>
+        </fieldset>
+
+        <fieldset data-id="pw-alphanum">
+          <legend>
+            Alphanumeric (Base
+            <span data-name="base">M</span>) <span data-name="entropy">12</span>
+          </legend>
+          <div class="password-display" data-name="password">
+            Error: Could not generate password
+          </div>
+          <pre
+            style="text-align: center"
+          ><span data-name="charset">abc123</span></pre>
+        </fieldset>
+
+        <fieldset data-id="pw-hex">
+          <legend>
+            Hex (Base
+            <span data-name="base">16</span>)
+            <span data-name="entropy">12</span>
+          </legend>
+          <div class="password-display" data-name="password">
+            Error: Could not generate password
+          </div>
+          <pre
+            style="text-align: center"
+          ><span data-name="charset">0123456789abcdef</span></pre>
+        </fieldset>
+
         <label>
           Number of Characters:
-          <span data-id="chars">14</span>
-          <input type="range" name="chars" min="1" max="42" value="14" />
+          <span data-id="chars">16</span>
+          <input type="range" name="chars" min="1" max="42" value="16" />
         </label>
         <label>
           <input type="checkbox" id="excludeIdentical" checked />
           Exclude identical characters (I,l,0,O)
         </label>
         <label>
-          <input type="checkbox" id="includeSpecials" checked />
-          Include special characters
+          <input type="checkbox" id="hypenateAlphanum" checked />
+          Hyphenate alphanumerics
         </label>
         <button type="button" id="generateButton">Generate Password</button>
       </form>
@@ -134,7 +175,7 @@
           <legend>Strength</legend>
           <label>
             Minimum Entropy:
-            <span data-id="bits">73</span>-bits
+            <span data-id="bits">73</span>-bit
             <input
               type="range"
               name="bits"
@@ -217,6 +258,7 @@
           </div>
         </details>
       </form>
+      <br />
     </main>
     <script type="importmap">
       {
