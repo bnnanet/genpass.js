@@ -1,5 +1,5 @@
 import Assert from "node:assert/strict";
-import GenPass from "./genpass.js";
+import GenPass from "genpass";
 
 let BaseX = {};
 
