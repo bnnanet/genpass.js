@@ -1,0 +1,26 @@
+#!/bin/sh
+# shellcheck disable=SC1090
+set -e
+set -u
+
+if ! command -v caddy > /dev/null; then
+    curl https://webi.sh/caddy | sh
+    if ! command -v caddy > /dev/null; then
+        . ~/.config/envman/PATH.env
+    fi
+fi
+caddy fmt --overwrite ./Caddyfile.local
+
+(
+    sleep 0.35
+    BOLD='\033[1m'
+    CYAN='\033[36m'
+    YELLOW='\033[33m'
+    GREEN='\033[32m'
+    RESET='\033[0m'
+    DIM='\033[2m'
+    # shellcheck disable=SC2059
+    printf "\n${BOLD}${CYAN}Serving as ${YELLOW}https://local.bnna.net${RESET} (${DIM}${GREEN}localhost${RESET}) ...\n\n"
+) &
+
+caddy run --config ./Caddyfile.local --adapter caddyfile

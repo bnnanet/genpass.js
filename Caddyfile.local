@@ -1,0 +1,9 @@
+local.bnna.net {
+	tls internal
+
+	encode gzip zstd
+
+	file_server {
+		root ./
+	}
+}

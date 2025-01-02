@@ -1,0 +1,7 @@
+genpass.example.com {
+	encode gzip zstd
+
+	file_server {
+		root ./genpass.example.com/
+	}
+}
