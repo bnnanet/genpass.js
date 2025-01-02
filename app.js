@@ -11,9 +11,13 @@ let $specialChars = document.querySelector('[name="specialChars"]');
 /** @type {HTMLInputElement} */ //@ts-expect-error
 let $excludeIdentical = document.querySelector("#excludeIdentical");
 /** @type {HTMLInputElement} */ //@ts-expect-error
+let $includeUppercase = document.querySelector("#includeUppercase");
+/** @type {HTMLInputElement} */ //@ts-expect-error
 let $hypenateAlphanum = document.querySelector("#hypenateAlphanum");
 /** @type {Array<HTMLInputElement>} */ //@ts-expect-error
 let $blacklists = document.querySelectorAll("[data-id=blacklists] input");
+/** @type {HTMLElement} */ //@ts-expect-error
+let $conflictChars = document.querySelector('[data-id="conflict-chars"]');
 
 /** @type {HTMLInputElement} */ //@ts-expect-error
 let $bits = document.querySelector('[name="bits"]');
@@ -91,8 +95,16 @@ function getBlacklist() {
 
     blacklist += partial;
   }
+
+  if (!$includeUppercase.checked) {
+    blacklist += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  }
   if ($excludeIdentical.checked) {
-    blacklist += "lIO0"; // base58
+    if ($includeUppercase.checked) {
+      blacklist += "lIO0"; // base58
+    } else {
+      blacklist += "liou"; // crockford base32
+    }
   }
 
   return blacklist;
@@ -115,18 +127,26 @@ function updateCharset() {
   let basename = $selectedBase.value;
   //@ts-expect-error
   let base = GenPass.bases[basename];
-  let specials = "";
 
+  let blacklist = "";
+  if (!$includeUppercase.checked) {
+    blacklist += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  }
   if ($excludeIdentical.checked) {
-    let exclusions = "IlO0";
-    base = GenPass.calculateAllowed(base, exclusions);
+    if ($includeUppercase.checked) {
+      blacklist += "lIO0"; // base58
+    } else {
+      blacklist += "liou"; // crockford base32
+    }
   }
 
+  let specials = "";
   {
     let exclusions = getBlacklist();
     specials = GenPass.calculateAllowed(GenPass.specials, exclusions);
   }
 
+  base = GenPass.calculateAllowed(base, blacklist);
   let charset = base + specials;
 
   $baseCharset.value = base;
@@ -180,7 +200,12 @@ function updateMinCharLen() {
   encodePassword();
 }
 
-function refreshAll() {
+function updateOptions() {
+  if ($includeUppercase.checked) {
+    $conflictChars.textContent = "I,l,0,O";
+  } else {
+    $conflictChars.textContent = "i,l,0,u";
+  }
   updateCharset();
   encodePassword();
 }
@@ -221,6 +246,7 @@ function encodePassword() {
  * @returns {string} - The formatted string.
  */
 function formatAlphanum(input) {
+  /* jshint maxcomplexity: 30 */
   const length = input.length;
 
   // TODO: generalize this a bit
@@ -294,7 +320,7 @@ function formatAlphanum(input) {
 async function main() {
   let $checks = document.querySelectorAll('input[type="checkbox"]');
   for (let $check of $checks) {
-    $check.addEventListener("change", refreshAll);
+    $check.addEventListener("change", updateOptions);
   }
 
   $bits.addEventListener("input", updateMinBits);
@@ -308,6 +334,7 @@ async function main() {
   updateCharset();
   generateNewPassword();
   updateMinCharLen();
+  updateOptions();
 }
 
 main().catch(handleError);
