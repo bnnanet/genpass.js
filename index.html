@@ -111,6 +111,12 @@
         </ul>
       </nav>
       <p>The World's Most Sane Password Generator</p>
+      <pre style="text-align: left"><code>// npm install --save @root/genpass
+import GenPass from "@root/genpass";
+
+let entropy = GenPass.generateBytes(64);
+let password = GenPass.encodeChars(GenPass.bases.base32_crockford, entropy, 16);
+password = GenPass.hyphenate(password);</code></pre>
     </header>
     <main>
       <form>
