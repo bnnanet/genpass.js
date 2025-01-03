@@ -2,6 +2,8 @@ import GenPass from "@root/genpass";
 
 let passBytes = new Uint8Array(0);
 
+let charMode = true;
+
 /** @type {HTMLButtonElement} */ //@ts-expect-error
 let $generateButton = document.querySelector("#generateButton");
 /** @type {HTMLInputElement} */ //@ts-expect-error
@@ -177,6 +179,7 @@ function updateMinBits() {
 
   $bitsCount.textContent = $bits.value;
 
+  charMode = false;
   encodePassword();
 }
 
@@ -197,6 +200,7 @@ function updateMinCharLen() {
   hex.$bits.textContent = `${hexNumBits}-bit`;
 
   $charsCount.textContent = $chars.value;
+  charMode = true;
   encodePassword();
 }
 
@@ -207,6 +211,11 @@ function updateOptions() {
     $conflictChars.textContent = "i,l,0,u";
   }
   updateCharset();
+  if (charMode) {
+    updateMinCharLen();
+  } else {
+    updateMinBits();
+  }
   encodePassword();
 }
 
