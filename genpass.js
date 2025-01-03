@@ -70,7 +70,7 @@ GenPass.calculateAllowed = function (charset, blacklist) {
  * @param {Number} [n=64]
  * @returns {Uint8Array}
  */
-GenPass.generateBytes = function (n = 64) {
+GenPass.generatePaddedBytes = function (n = 64) {
   n += 1; // 1 extra for padding
 
   let rand65 = new Uint8Array(n);
@@ -78,8 +78,7 @@ GenPass.generateBytes = function (n = 64) {
 
   return rand65;
 };
-
-// TODO bring generateChars and generateBits back
+GenPass.generatePaddedBytes = GenPass.generatePaddedBytes;
 
 /**
  * Generate password with a minimum number of characters.
@@ -92,7 +91,7 @@ GenPass.generateChars = function (charset, numChars) {
   let numBits = GenPass.getMinBits(charset.length, numChars + 4);
   let numBytes = GenPass.bitsToBytes(numBits);
   numBytes = Math.max(64, numBytes);
-  let rand65 = GenPass.generateBytes(numBytes);
+  let rand65 = GenPass.generatePaddedBytes(numBytes);
 
   let rnd = GenPass.encodeChars(charset, rand65, numChars);
   return rnd;

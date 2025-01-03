@@ -29,7 +29,7 @@ npm install --save @root/genpass
 ```js
 import GenPass from "@root/genpass";
 
-let entropy = GenPass.generateBytes();
+let entropy = GenPass.generatePaddedBytes();
 let charset = GenPass.bases.base58 + GenPass.specials.safe;
 let password = GenPass.encodeChars(charset, entropy, 16);
 console.info(password);

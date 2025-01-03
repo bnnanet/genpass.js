@@ -220,7 +220,7 @@ function updateOptions() {
 }
 
 function generateNewPassword() {
-  passBytes = GenPass.generateBytes();
+  passBytes = GenPass.generatePaddedBytes();
 
   encodePassword();
 }

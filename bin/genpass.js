@@ -2,7 +2,7 @@ import GenPass from "@root/genpass";
 
 let numCharsStr = process.argv[2] || "16";
 let numChars = parseInt(numCharsStr, 10);
-let entropy = GenPass.generateBytes();
+let entropy = GenPass.generatePaddedBytes();
 
 let alphanums = GenPass.bases.base58;
 let strictAlphanum = GenPass.encodeChars(alphanums, entropy, numChars);
