@@ -1,4 +1,4 @@
-# genpass.js
+# [genpass.js](https://github.com/bnnanet/genpass.js)
 
 A Sane, Self-Hosted Password Generator
 
@@ -23,11 +23,11 @@ A Sane, Self-Hosted Password Generator
 ## JavaScript
 
 ```sh
-npm install --save genpass
+npm install --save @root/genpass
 ```
 
 ```js
-import GenPass from "genpass";
+import GenPass from "@root/genpass";
 
 let entropy = GenPass.generateBytes();
 let charset = GenPass.bases.base58 + GenPass.specials.safe;

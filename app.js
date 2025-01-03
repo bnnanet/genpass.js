@@ -1,4 +1,4 @@
-import GenPass from "genpass";
+import GenPass from "@root/genpass";
 
 let passBytes = new Uint8Array(0);
 

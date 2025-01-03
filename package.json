@@ -1,5 +1,5 @@
 {
-  "name": "genpass",
+  "name": "@root/genpass",
   "version": "0.1.0",
   "description": "A Sane, Self-Hosted Password Generator",
   "main": "genpass.js",
@@ -13,8 +13,8 @@
   ],
   "type": "module",
   "imports": {
-    "genpass": "./genpass.js",
-    "genpass/": "./"
+    "@root/genpass": "./genpass.js",
+    "@root/genpass/": "./"
   },
   "exports": {
     ".": "./genpass.js",

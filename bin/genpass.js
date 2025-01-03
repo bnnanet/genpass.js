@@ -1,4 +1,4 @@
-import GenPass from "genpass";
+import GenPass from "@root/genpass";
 
 let numCharsStr = process.argv[2] || "16";
 let numChars = parseInt(numCharsStr, 10);
